@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0B0C10;
+  --card: #12141C;
+  --border: #1F2330;
+  --yellow: #FFD60A;
+  --ink: #0B0C10;
+  --radius: 0.5rem;
+}
+
+* { border-color: var(--border); }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #F4F5F7;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-cond { font-family: "Barlow Condensed", "Inter", sans-serif; }
+
+::selection { background: var(--yellow); color: #0B0C10; }
+
+/* thin scrollbars */
+::-webkit-scrollbar { height: 8px; width: 8px; }
+::-webkit-scrollbar-thumb { background: #2a2f40; border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ---------- Hero animations ---------- */
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fade-in-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes hood-shine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.hood-shine {
+  background: linear-gradient(90deg, transparent, rgba(255,214,10,0.12), transparent);
+  background-size: 200% 100%;
+  animation: hood-shine 6s linear infinite;
+}
+
+@keyframes moto-pass {
+  0% { transform: translateX(-40px); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateX(120vw); opacity: 0; }
+}
+.moto-pass { animation: moto-pass 0.75s ease-in both; }
+
+/* checkered speed grid for hero central band */
+.checkered {
+  background-image:
+    linear-gradient(45deg, #0B0C10 25%, transparent 25%),
+    linear-gradient(-45deg, #0B0C10 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #0B0C10 75%),
+    linear-gradient(-45deg, transparent 75%, #0B0C10 75%);
+  background-size: 32px 32px;
+  background-position: 0 0, 0 16px, 16px -16px, -16px 0px;
+}
+
+.speed-dashes {
+  background-image: repeating-linear-gradient(90deg, #0B0C10 0 20px, transparent 20px 44px);
+}
+
+/* ---------- Leaflet pins ---------- */
+.aulp-pin {
+  width: 20px; height: 20px; border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  border: 2px solid rgba(255,255,255,0.85);
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.4);
+}
+.leaflet-container { background: #0B0C10; font-family: "Inter", sans-serif; }
+.leaflet-popup-content-wrapper { background: #12141C; color: #F4F5F7; border: 1px solid #1F2330; }
+.leaflet-popup-tip { background: #12141C; }
+
+@layer base {
+  [data-debug-wrapper="true"] { display: contents !important; }
+}
