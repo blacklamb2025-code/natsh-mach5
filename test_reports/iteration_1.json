@@ -1,0 +1,42 @@
+{
+  "summary": "Full-stack testing of hardened AUTOMOTOS L.P. (JWT httpOnly cookie auth). Backend: 38/39 pytest passing. All auth flow, admin-protection, Pydantic validation, pagination cap, rate-limit on /submissions, security headers, public read/write endpoints and admin CRUD verified. The single failing test (brute-force lockout via public URL) is caused by the Kubernetes ingress rotating client IPs, so slowapi's get_remote_address sees different pod IPs on each request; when hitting the pod directly on localhost, lockout returns 429 correctly after 5 failed logins. Frontend: home loads with hero, Suma tu taller submits and shows toast, admin panel login with wrong password shows 'Credenciales invalidas', login with correct creds shows admin tabs (Pendientes/Agenda/...), JWT is NOT in localStorage, access_token/refresh_token cookies are httpOnly (not visible via document.cookie). Business detail loads and review posting works (toast 'Gracias por tu resena!' and review appears in list).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {
+        "endpoint": "/api/auth/login",
+        "issue": "Brute-force lockout (per identifier IP:email) and slowapi rate limits use request.client.host, which behind the k8s ingress is the ingress pod IP rather than the real client IP. Different ingress pods rotate, causing each real client to be split across multiple identifiers, weakening lockout enforcement over the public URL. Locally against the pod (curl on :8001), the 6th failed login correctly returns 429. Recommendation: honor X-Forwarded-For (e.g., configure Uvicorn with proxy_headers/forwarded_allow_ips or add a get_real_ip helper) so slowapi.key_func and the identifier used in _locked_out share the true client IP."
+      }
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Enable proxy-header aware client IP resolution in the backend so that per-client brute-force lockout and slowapi rate limiting work correctly behind the k8s ingress (currently the ingress pod IP is used and rotates)."
+  ],
+  "critical_code_review_comments": [
+    "Login attempt identifier depends on request.client.host, which is the reverse-proxy IP on this deployment; consider using X-Forwarded-For (first hop) so that lockout is enforced per real client. Same concern applies to all slowapi limits (login, submissions, reviews, radars).",
+    "seed_admin() correctly re-hashes if password changed (verify_password check) - idempotent seed is OK.",
+    "Cookies are set with SameSite=None + Secure + httpOnly - matches spec; verified in browser test that document.cookie does not expose access_token."
+  ],
+  "updated_files": [
+    "/app/backend/tests/backend_test.py"
+  ],
+  "success_rate": {
+    "backend": "97% (38/39)",
+    "frontend": "100% (home, Suma tu taller, admin login/logout modal via footer, review post)"
+  },
+  "test_credentials": "admin@automotoslp.com / AutoMotosLP.2026! (from /app/memory/test_credentials.md and /app/backend/.env)",
+  "seed_data_creation": "None new; used existing seed data. Test data prefixed TEST_ (workshops/reviews) inserted through UI and API but admin cleanup executed where possible.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend pytest suite lives at /app/backend/tests/backend_test.py and uses JWT cookie session fixture. Note: brute-force lockout test only reliably passes when running against localhost:8001, not the public URL, because the k8s ingress rotates client IPs. If revisiting, either point the test at localhost:8001 or fix the backend to trust X-Forwarded-For. Admin modal is opened via the Footer button data-testid='footer-admin-btn' (Home button labeled 'Admin').",
+  "rca of the issue": "Test test_brute_force_lockout expects HTTP 429 after 6+ failed logins for same (IP,email). Backend logic is correct (_locked_out+_register_fail with MAX_FAILED=5), but the identifier is built as f'{get_remote_address(request)}:{email}' where get_remote_address returns request.client.host. In this preview environment the FastAPI app receives connections from multiple ingress pod IPs (observed 10.208.134.74 and 10.208.134.75 in db.login_attempts), so each real client's failed-login counter is split across at least two identifiers, and MAX_FAILED is never reached for a single identifier within the test's 8 requests. Direct curl to http://localhost:8001 shows correct 429 on the 6th failed login, confirming the code path is fine and the issue is proxy-IP unawareness. Mitigation: configure Uvicorn with --proxy-headers --forwarded-allow-ips='*' (or set app.state.limiter's key_func + identifier to X-Forwarded-For's first hop) so the real client IP is used."
+}

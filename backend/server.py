@@ -49,7 +49,15 @@ PAGE_LIMIT_DEFAULT = 60
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-limiter = Limiter(key_func=get_remote_address)
+def get_real_ip(request: Request) -> str:
+    # Detras del ingress k8s el client.host es la IP del proxy: usamos el primer hop de X-Forwarded-For
+    xff = request.headers.get("x-forwarded-for", "")
+    if xff:
+        return xff.split(",")[0].strip()
+    return get_remote_address(request)
+
+
+limiter = Limiter(key_func=get_real_ip)
 
 app = FastAPI(
     docs_url=None if IS_PROD else "/docs",
@@ -279,7 +287,7 @@ async def _register_fail(identifier: str):
 @limiter.limit("10/minute")
 async def login(request: Request, response: Response, body: LoginInput):
     email = body.email.lower().strip()
-    identifier = f"{get_remote_address(request)}:{email}"
+    identifier = f"{get_real_ip(request)}:{email}"
     if await _locked_out(identifier):
         raise HTTPException(status_code=429, detail="Demasiados intentos. Reintentá en unos minutos.")
     user = await db.users.find_one({"email": email})
