@@ -42,7 +42,7 @@ export function Mach5Bar() {
             <button
               key={key}
               data-testid={testid}
-              onClick={() => openModal(modal, modal === "map" ? { origin: "B" } : {})}
+              onClick={() => openModal(modal, modal === "map" ? { initial: "combustible" } : {})}
               className="w-20 h-20 rounded-xl flex flex-col items-center justify-center gap-1 border border-[#1F2330] hover:-translate-y-0.5 transition-all"
               style={{ background: `${color}1A` }}
             >

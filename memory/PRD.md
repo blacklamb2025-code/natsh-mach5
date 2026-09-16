@@ -15,7 +15,7 @@ Iteración actual: **Endurecimiento de seguridad** sin cambiar funcionalidad (im
 - Mach 5 wheel, búsqueda global, AUTO/MOTO, grilla de categorías, listado/detalle, reseñas, Suma tu taller, panel admin.
 
 ## Implemented
-- (2026-06 previo) App completa reconstruida + 5 bloques de backlog.
+- (2026-06) Regla final del mapa: cada botón del volante abre el mapa con SU capa encendida y el resto apagadas (B→Combustible, "Ver en mapa" de desvío→Desvíos naranja). Confirmado presente: seguridad_airbag=both, Emergencias pantalla completa 4 botones, Desvíos capa+CRUD+seed 4.
 - **(2026-06) Endurecimiento de seguridad aplicado:**
   - JWT propio email+password (bcrypt) reemplaza el token estático compartido `X-Admin-Token`.
   - JWT en cookie httpOnly + SameSite=None + Secure (no localStorage). Access 30min + refresh 7d. HS256 validado explícito (anti alg:none).

@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 
 const CENTER = [-34.9214, -57.9544];
 
-// Backlog block 3: ALL layers start OFF regardless of which wheel button opened the map.
+// Regla final: cada boton del volante abre el mapa con SU capa encendida y las demas apagadas.
 const LAYERS = [
   { key: "combustible", label: "Combustible / GNC", color: "#0088FF", Icon: Fuel },
   { key: "carga", label: "Carga EV", color: "#A3E635", Icon: BatteryCharging },
@@ -25,12 +25,16 @@ function pinIcon(color) {
   });
 }
 
-export function MapView({ onClose, focus }) {
+export function MapView({ onClose, focus, initial }) {
   const mapRef = useRef(null);
   const containerRef = useRef(null);
   const groupsRef = useRef({});
-  // all off by default
-  const [active, setActive] = useState({ combustible: false, carga: false, radar: false, camara: false, desvios: false });
+  // Regla final: el mapa abre con la capa del boton que lo abrio encendida y el resto apagado.
+  const [active, setActive] = useState(() => {
+    const base = { combustible: false, carga: false, radar: false, camara: false, desvios: false };
+    if (initial && Object.prototype.hasOwnProperty.call(base, initial)) base[initial] = true;
+    return base;
+  });
   const [data, setData] = useState({ fuel: [], radars: [], cameras: [], desvios: [] });
   const [reporting, setReporting] = useState(false);
 

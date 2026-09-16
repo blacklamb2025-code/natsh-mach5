@@ -36,7 +36,7 @@ export function DesviosModal({ onClose }) {
               {d.lat != null && d.lng != null && (
                 <button
                   data-testid={`desvio-map-${d.id}`}
-                  onClick={() => { onClose(); openModal("map", { focus: [d.lat, d.lng] }); }}
+                  onClick={() => { onClose(); openModal("map", { focus: [d.lat, d.lng], initial: "desvios" }); }}
                   className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-[#F97316] hover:brightness-110"
                 >
                   <MapPin size={13} /> Ver en mapa
