@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { CalendarDays, MapPin } from "lucide-react";
 import { api } from "@/lib/api";
-
 const TAG = {
   expo: { label: "EXPO", bg: "#FFD60A", fg: "#0B0C10" },
   carrera: { label: "CARRERA", bg: "#FF2A3B", fg: "#FFFFFF" },
   encuentro: { label: "ENCUENTRO", bg: "#38BDF8", fg: "#0B0C10" },
+  asesoria: { label: "ASESORÍA / GESTORÍA", bg: "#A78BFA", fg: "#0B0C10" },
 };
-
 function fmtDate(d) {
   try {
     return new Date(d + "T00:00:00").toLocaleDateString("es-AR", { day: "2-digit", month: "long", year: "numeric" });
   } catch { return d; }
 }
-
 export function AgendaFierro() {
   const [events, setEvents] = useState([]);
   useEffect(() => { api.getEvents().then(setEvents); }, []);
-
   return (
     <section id="agenda" className="max-w-6xl mx-auto px-4 py-12" data-testid="agenda-fierro">
       <div className="flex items-center gap-3 mb-2">
@@ -25,7 +22,6 @@ export function AgendaFierro() {
         <h2 className="font-cond font-900 uppercase text-4xl sm:text-5xl text-white tracking-wide">Agenda Fierro</h2>
       </div>
       <p className="text-white/50 text-base">Expos, carreras y encuentros en La Plata y alrededores.</p>
-
       <div className="grid sm:grid-cols-2 gap-4 mt-6">
         {events.map((e) => {
           const t = TAG[e.type] || TAG.encuentro;
