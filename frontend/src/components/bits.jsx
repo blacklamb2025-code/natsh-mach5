@@ -47,7 +47,7 @@ export function BackButton({ className = "" }) {
     <button
       onClick={back}
       data-testid="back-button"
-      className={`inline-flex items-center gap-1 text-sm font-semibold text-white/80 hover:text-[#FFD60A] transition-colors ${className}`}
+      className={`inline-flex items-center gap-1 text-sm font-bold rounded-full px-3 py-1.5 bg-[#FFD60A] text-[#0B0C10] hover:brightness-95 transition ${className}`}
     >
       <ChevronLeft size={18} /> Volver
     </button>

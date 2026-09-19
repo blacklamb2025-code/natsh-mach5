@@ -123,8 +123,8 @@ export function MapView({ onClose, focus, initial }) {
     <div className="fixed inset-0 z-50 bg-[#0B0C10]" data-testid="mach5-map-view">
       <div className="absolute top-0 left-0 right-0 z-[1000] flex items-center justify-between px-4 py-3 bg-[#0B0C10]/90 backdrop-blur border-b border-[#1F2330]">
         <div className="flex items-center gap-2">
-          <button data-testid="map-back" onClick={onClose} className="inline-flex items-center gap-1 text-white/70 hover:text-white">
-            <ChevronLeft size={22} /> <span className="text-sm font-semibold">Volver</span>
+          <button data-testid="map-back" onClick={onClose} className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 bg-[#FFD60A] text-[#0B0C10] font-bold hover:brightness-95 transition">
+            <ChevronLeft size={20} /> <span className="text-sm">Volver</span>
           </button>
           <h3 className="font-cond font-900 uppercase text-xl text-white tracking-wide ml-2">Mapa</h3>
         </div>
