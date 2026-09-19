@@ -5,7 +5,9 @@ import { CategoryIcon } from "@/components/CategoryIcon";
 import { BackButton } from "@/components/bits";
 export function CategoryGrid({ vehicle }) {
   const { push } = useApp();
-  const cats = getCategoriesForVehicle(vehicle);
+  // Asesoría Legal y Papeles/VTV NO son rubros de Auto ni Moto (van arriba de Agenda Fierro).
+  const HIDDEN = ["asesoria_legal", "papeles_vtv"];
+  const cats = getCategoriesForVehicle(vehicle).filter((c) => !HIDDEN.includes(c.slug));
   return (
     <section className="max-w-6xl mx-auto px-4 py-8" data-testid="category-grid">
       <div className="mb-4"><BackButton /></div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
-import { X, Fuel, BatteryCharging, Gauge, Camera, Cone, Plus } from "lucide-react";
+import { X, Fuel, BatteryCharging, Gauge, Camera, Cone, Plus, ChevronLeft } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 
@@ -97,7 +97,12 @@ export function MapView({ onClose, focus, initial }) {
     });
   }, [active, data]);
 
-  const toggle = (k) => setActive((a) => ({ ...a, [k]: !a[k] }));
+  // Interruptores exclusivos: cada chip enciende SOLO sus marcadores; nada se apila.
+  const toggle = (k) =>
+    setActive((a) => {
+      const cleared = { combustible: false, carga: false, radar: false, camara: false, desvios: false };
+      return a[k] ? cleared : { ...cleared, [k]: true };
+    });
 
   const startReport = () => {
     if (!mapRef.current) return;
@@ -108,7 +113,7 @@ export function MapView({ onClose, focus, initial }) {
       setReporting(false);
       const created = await api.addRadar({ lat: e.latlng.lat, lng: e.latlng.lng, type: "movil", description: "Reporte comunitario", community: true });
       setData((d) => ({ ...d, radars: [...d.radars, created] }));
-      setActive((a) => ({ ...a, radar: true }));
+      setActive({ combustible: false, carga: false, radar: true, camara: false, desvios: false });
       toast.success("Radar reportado. Gracias!");
     };
     mapRef.current.on("click", handler);
@@ -117,7 +122,12 @@ export function MapView({ onClose, focus, initial }) {
   return (
     <div className="fixed inset-0 z-50 bg-[#0B0C10]" data-testid="mach5-map-view">
       <div className="absolute top-0 left-0 right-0 z-[1000] flex items-center justify-between px-4 py-3 bg-[#0B0C10]/90 backdrop-blur border-b border-[#1F2330]">
-        <h3 className="font-cond font-900 uppercase text-xl text-white tracking-wide">Mapa</h3>
+        <div className="flex items-center gap-2">
+          <button data-testid="map-back" onClick={onClose} className="inline-flex items-center gap-1 text-white/70 hover:text-white">
+            <ChevronLeft size={22} /> <span className="text-sm font-semibold">Volver</span>
+          </button>
+          <h3 className="font-cond font-900 uppercase text-xl text-white tracking-wide ml-2">Mapa</h3>
+        </div>
         <button data-testid="map-close" onClick={onClose} className="text-white/60 hover:text-white"><X size={24} /></button>
       </div>
 
