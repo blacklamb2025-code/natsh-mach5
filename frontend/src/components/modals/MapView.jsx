@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
-import { X, Fuel, BatteryCharging, Gauge, Camera, Navigation2, Plus } from "lucide-react";
+import { X, Fuel, BatteryCharging, Gauge, Camera, Cone, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 
@@ -12,7 +12,7 @@ const LAYERS = [
   { key: "carga", label: "Carga EV", color: "#A3E635", Icon: BatteryCharging },
   { key: "radar", label: "Radares", color: "#FF2A3B", Icon: Gauge },
   { key: "camara", label: "Camaras", color: "#A78BFA", Icon: Camera },
-  { key: "desvios", label: "Desvios", color: "#F97316", Icon: Navigation2 },
+  { key: "desvios", label: "DESVÍOS", color: "#FF8C00", Icon: Cone },
 ];
 
 function pinIcon(color) {
@@ -80,7 +80,7 @@ export function MapView({ onClose, focus, initial }) {
     });
     data.desvios.forEach((d) => {
       if (d.lat == null || d.lng == null) return;
-      L.marker([d.lat, d.lng], { icon: pinIcon("#F97316") })
+      L.marker([d.lat, d.lng], { icon: pinIcon("#FF8C00") })
         .bindPopup(`<b>${d.street}</b><br>${d.type.toUpperCase()}<br>${d.description}`)
         .addTo(g.desvios);
     });
