@@ -1,22 +1,29 @@
 import React from "react";
 
-// Big lockup for hero / footer: LA PLATA band + AU/MO box + TOS + vertical ALREDEDORES
+// Marca AUTOMOTOS L.P.: LA PLATA (amarillo) + [AU / MO] blancos a la izquierda + TOS negro a la derecha + alrededores (amarillo, abajo derecha)
 export function LogoBig({ className = "" }) {
   return (
     <div className={`inline-flex flex-col items-start ${className}`} data-testid="logo-big">
-      <div className="bg-[#FFD60A] text-[#0B0C10] font-cond font-800 tracking-[0.35em] text-xs px-3 py-1 uppercase">
+      {/* LA PLATA - solo letras amarillas, un poco mas grande */}
+      <div className="text-[#FFD60A] font-cond font-800 uppercase tracking-[0.35em] text-sm sm:text-base mb-1.5">
         La Plata
       </div>
-      <div className="flex items-stretch mt-1">
-        <div className="flex flex-col font-cond font-900 leading-[0.82] text-white text-5xl sm:text-6xl">
-          <span className="bg-white text-[#0B0C10] px-2">AU/MO</span>
-          <span className="px-2">TOS</span>
+
+      {/* 3 rectangulos: [AU / MO] blancos a la izquierda + TOS negro a la derecha (alto = ambos blancos) */}
+      <div className="flex items-stretch gap-1">
+        <div className="flex flex-col gap-1 font-cond font-900 leading-none text-5xl sm:text-6xl">
+          <span className="bg-white text-[#0B0C10] px-3 py-1.5 text-center">AU</span>
+          <span className="bg-white text-[#0B0C10] px-3 py-1.5 text-center">MO</span>
         </div>
-        <div className="ml-1 bg-[#FFD60A] text-[#0B0C10] font-cond font-800 uppercase text-[10px] tracking-[0.3em] writing-vertical px-1 flex items-center">
-          <span style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}>Alrededores</span>
+        <div className="flex items-center justify-center overflow-hidden bg-[#0B0C10] border border-[#1F2330] text-white font-cond font-900 leading-none text-5xl sm:text-6xl px-4">
+          <span className="inline-block origin-center scale-y-[1.9]">TOS</span>
         </div>
       </div>
-      <div className="text-white/50 font-cond tracking-[0.3em] text-xs mt-1 uppercase">L.P.</div>
+
+      {/* alrededores - abajo a la derecha, solo letras amarillas */}
+      <div className="self-end text-[#FFD60A] font-cond font-800 uppercase tracking-[0.35em] text-xs sm:text-sm mt-1.5">
+        alrededores
+      </div>
     </div>
   );
 }
