@@ -21,7 +21,7 @@ export function Header() {
     <header className="sticky top-0 z-40 h-12 bg-[#0B0C10]/90 backdrop-blur-md border-b border-[#1F2330]">
       <div className="max-w-6xl mx-auto px-4 h-full flex items-center gap-3">
         <button onClick={goHome} data-testid="header-logo" className="shrink-0 flex items-center gap-2">
-          <span className="inline-block scale-[0.7] origin-left -mr-6">
+          <span className="inline-flex items-center">
             <LogoCompact />
           </span>
           <span className="hidden md:inline-flex text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#FFD60A] text-[#0B0C10]" data-testid="header-section-chip">

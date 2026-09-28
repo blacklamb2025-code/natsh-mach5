@@ -1,42 +1,28 @@
 import React from "react";
 
-// Marca AUTOMOTOS L.P.: LA PLATA (amarillo) + [AU / MO] blancos a la izquierda + TOS negro a la derecha + alrededores (amarillo, abajo derecha)
+// Marca AUTOMOTOS L.P. - logo COMPLETO (LA PLATA - ALREDEDORES). Se usa a pie de pagina.
 export function LogoBig({ className = "" }) {
   return (
-    <div className={`inline-flex flex-col items-start ${className}`} data-testid="logo-big">
-      {/* LA PLATA - solo letras amarillas, un poco mas grande */}
-      <div className="text-[#FFD60A] font-cond font-800 uppercase tracking-[0.35em] text-sm sm:text-base mb-1.5">
-        La Plata
-      </div>
-
-      {/* 3 rectangulos: [AU / MO] blancos a la izquierda + TOS negro a la derecha (alto = ambos blancos) */}
-      <div className="flex items-stretch gap-1">
-        <div className="flex flex-col gap-1 font-cond font-900 leading-none text-5xl sm:text-6xl">
-          <span className="bg-white text-[#0B0C10] px-3 py-1.5 text-center">AU</span>
-          <span className="bg-white text-[#0B0C10] px-3 py-1.5 text-center">MO</span>
-        </div>
-        <div className="flex items-center justify-center overflow-hidden bg-[#0B0C10] border border-[#1F2330] text-white font-cond font-900 leading-none text-5xl sm:text-6xl px-4">
-          <span className="inline-block origin-center scale-y-[1.9]">TOS</span>
-        </div>
-      </div>
-
-      {/* alrededores - abajo a la derecha, solo letras amarillas */}
-      <div className="self-end text-[#FFD60A] font-cond font-800 uppercase tracking-[0.35em] text-xs sm:text-sm mt-1.5">
-        alrededores
-      </div>
-    </div>
+    <img
+      src="/logo-completo.webp"
+      alt="AUTO MOTOS - La Plata y alrededores"
+      className={`h-16 sm:h-20 w-auto max-w-full block select-none ${className}`}
+      data-testid="logo-big"
+      draggable={false}
+    />
   );
 }
 
-// Compact lockup for sticky nav: AU/MO | TOS
+// Logo SIMPLE (AUTO MOTOS L.P.) para el nav sticky.
 export function LogoCompact({ className = "" }) {
   return (
-    <div className={`inline-flex items-center font-cond font-900 leading-none ${className}`} data-testid="logo-compact">
-      <span className="bg-white text-[#0B0C10] px-1.5 py-0.5 text-lg sm:text-xl">AU/MO</span>
-      <span className="text-white/40 mx-1 text-lg">|</span>
-      <span className="text-white text-lg sm:text-xl">TOS</span>
-      <span className="text-[#FFD60A] ml-1 text-xs font-800 tracking-widest">L.P.</span>
-    </div>
+    <img
+      src="/logo-simple.webp"
+      alt="AUTO MOTOS L.P."
+      className={`h-8 w-auto block select-none ${className}`}
+      data-testid="logo-compact"
+      draggable={false}
+    />
   );
 }
 
