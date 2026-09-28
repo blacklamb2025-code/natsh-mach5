@@ -22,7 +22,11 @@ export const waLink = (phone, text) => {
 };
 
 // withCredentials -> envia/recibe la cookie httpOnly del JWT (sin token en localStorage)
-const client = axios.create({ baseURL: API, withCredentials: true });
+const client = axios.create({
+  baseURL: API,
+  withCredentials: true,
+  headers: { "X-Requested-With": "XMLHttpRequest" },
+});
 
 export const api = {
   // public

@@ -37,7 +37,7 @@ JWT_ALGORITHM = "HS256"                          # algoritmo fijo, validado expl
 ACCESS_TOKEN_MINUTES = int(os.environ.get('ACCESS_TOKEN_MINUTES', '30'))
 REFRESH_TOKEN_DAYS = int(os.environ.get('REFRESH_TOKEN_DAYS', '7'))
 ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'admin@automotoslp.com')
-ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin123')
+ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
 IS_PROD = os.environ.get('ENV', 'production').lower() == 'production'
 CORS_ORIGINS = [o.strip() for o in os.environ.get('CORS_ORIGINS', '').split(',') if o.strip()]
 
@@ -107,10 +107,11 @@ def create_refresh_token(user_id: str) -> str:
 
 
 def _set_auth_cookies(response: Response, access: str, refresh: str):
+    # SameSite=Lax: front y API comparten dominio -> bloquea CSRF cross-site en POSTs admin sin romper el login.
     response.set_cookie("access_token", access, httponly=True, secure=True,
-                        samesite="none", max_age=ACCESS_TOKEN_MINUTES * 60, path="/")
+                        samesite="lax", max_age=ACCESS_TOKEN_MINUTES * 60, path="/")
     response.set_cookie("refresh_token", refresh, httponly=True, secure=True,
-                        samesite="none", max_age=REFRESH_TOKEN_DAYS * 86400, path="/")
+                        samesite="lax", max_age=REFRESH_TOKEN_DAYS * 86400, path="/")
 
 
 def _decode(token: str, expected_type: str) -> dict:
@@ -144,9 +145,13 @@ async def get_current_user(request: Request) -> dict:
         raise HTTPException(status_code=401, detail="No autenticado")
 
 
-async def get_current_admin(user: dict = Depends(get_current_user)) -> dict:
+async def get_current_admin(request: Request, user: dict = Depends(get_current_user)) -> dict:
     if user.get("role") != "admin":
         raise HTTPException(status_code=403, detail="No autorizado")
+    # Anti-CSRF: toda escritura admin exige header custom (un form cross-site no puede setearlo sin preflight).
+    if request.method not in ("GET", "HEAD", "OPTIONS"):
+        if request.headers.get("x-requested-with") != "XMLHttpRequest":
+            raise HTTPException(status_code=403, detail="Solicitud no permitida")
     return user
 
 
@@ -569,6 +574,9 @@ async def seed_collection(name: str, rows: list, with_created=True):
 
 
 async def seed_admin():
+    if not ADMIN_PASSWORD:
+        logger.warning("ADMIN_PASSWORD no configurada; se omite el seed del admin")
+        return
     existing = await db.users.find_one({"email": ADMIN_EMAIL.lower()})
     if existing is None:
         await db.users.insert_one({
@@ -619,7 +627,7 @@ app.add_middleware(
     allow_origins=CORS_ORIGINS or ["http://localhost:3000"],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
+    allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
 )
 
 
