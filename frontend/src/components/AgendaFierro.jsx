@@ -19,7 +19,7 @@ export function AgendaFierro() {
     <section id="agenda" className="max-w-6xl mx-auto px-4 py-12" data-testid="agenda-fierro">
       <div className="flex items-center gap-3 mb-2">
         <CalendarDays className="text-[#FFD60A]" />
-        <h2 className="font-cond font-900 uppercase text-4xl sm:text-5xl text-white tracking-wide">Agenda Fierro</h2>
+        <h2 className="font-cond font-900 uppercase text-4xl sm:text-5xl text-white tracking-wide">Agenda AUTOMOTOS L.P.</h2>
       </div>
       <p className="text-white/50 text-base">Expos, carreras y encuentros en La Plata y alrededores.</p>
       <div className="grid sm:grid-cols-2 gap-4 mt-6">

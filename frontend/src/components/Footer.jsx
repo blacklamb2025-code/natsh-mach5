@@ -10,7 +10,9 @@ export function Footer() {
     <footer className="border-t border-[#1F2330] bg-[#0B0C10] mt-10">
       <div className="max-w-6xl mx-auto px-4 py-10 grid gap-8 md:grid-cols-3">
         <div>
-          <LogoBig />
+          <div className="inline-block rounded-xl bg-white/95 px-4 py-3 shadow-lg shadow-black/30">
+            <LogoBig />
+          </div>
           <p className="text-white/50 text-sm mt-4 max-w-xs">
             La guia del fierro en La Plata y alrededores. Talleres, servicios y comunidad
             para autos y motos.
