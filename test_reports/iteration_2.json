@@ -1,0 +1,44 @@
+{
+  "summary": "CSRF header defense (X-Requested-With: XMLHttpRequest on all admin writes) verified end-to-end. Backend pytest: 17/17 pass in /app/backend/tests/test_csrf_admin.py — covers wrong-password 401, admin endpoint without cookie 401, GET /admin/submissions with and without XRW (both 200 since GETs are exempt), 5 write endpoints returning 403 without XRW header (verify business, crud add, approve submission, delete submission, reply review), CRUD add+delete on cameras/sites/desvios with XRW, full public submission + review flow without XRW (must NOT be affected), and admin approve/reject full flow with XRW. Frontend E2E: admin modal opens from footer, wrong password shows 'Credenciales invalidas', correct login reveals all 6 tabs (pendientes/agenda/camaras/emergencias/sitios/desvios), GET /admin/submissions returns 200, delete of a camera row triggered POST /admin/cameras and DELETE — no 403 seen anywhere from CSRF. Public flows unaffected.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "AdminPanel.jsx (crudAdd + reject/approve callers)",
+        "issue": "When an admin CRUD write returns a non-2xx (e.g., 422 from Pydantic when the user submits an empty form or invalid coords), the axios rejection is not caught: React's dev overlay shows a full-page 'Uncaught runtime errors: Request failed with status code 422' that blocks the whole UI. It's not caused by the CSRF change, but the CSRF-header rejection (403 'Solicitud no permitida') would surface the same way if it ever fired. Wrap crud add/del/approve/reject/verify calls in try/catch and show a toast instead.",
+        "selector": "[data-testid=\"admin-cameras-add\"], [data-testid^=\"admin-reject-\"]",
+        "priority": "MEDIUM"
+      }
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_csrf_admin.py",
+    "/app/test_reports/pytest/iteration_2.xml"
+  ],
+  "action_items": [
+    "In AdminPanel.jsx, wrap admin write calls (crudAdd/crudDel/approve/rejectSubmission/verifyBusiness/replyReview) with try/catch and toast on failure, so 422/403 responses don't trigger the React 'Uncaught runtime errors' overlay."
+  ],
+  "critical_code_review_comments": [
+    "get_current_admin correctly enforces x-requested-with only on non-GET/HEAD/OPTIONS — good, matches spec. GETs of /admin/submissions remain reachable without the header.",
+    "CORS allow_headers already includes 'X-Requested-With' and allow_credentials=True with explicit origin — required for cookie+header combo to work behind the k8s ingress.",
+    "Prior iteration finding (proxy-IP-aware rate-limit / brute-force lockout) still stands and is unrelated to CSRF work."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_csrf_admin.py"
+  ],
+  "success_rate": {
+    "backend": "100% (17/17 CSRF-focused tests)",
+    "frontend": "100% for admin login+tabs+GETs; admin CRUD writes reach the API correctly (CSRF header travels), but the client lacks error-handling around 4xx responses"
+  },
+  "test_credentials": "admin@automotoslp.com / AutoMotosLP.2026! (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "Test-created rows are all TEST_ prefixed and cleaned up in-test (cameras/sites/desvios add-then-delete). Pending submissions TEST_csrf_pending and TEST_csrf_pending_reject were approved/deleted respectively.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "CSRF regression suite is at /app/backend/tests/test_csrf_admin.py; run with `pytest backend/tests/test_csrf_admin.py -o addopts=`. It requires REACT_APP_BACKEND_URL from /app/frontend/.env (auto-loaded via python-dotenv). If AdminPanel gets try/catch around write calls, remove the React error overlay observation from frontend issues.",
+  "rca of the issue": "Not a CSRF bug. Root cause of the full-page red 'Uncaught runtime errors' overlay: frontend admin write calls in AdminPanel.jsx are fired without try/catch, so any 4xx axios response propagates as an unhandled promise rejection. React's dev-mode error overlay then shows the AxiosError. Fix: `try { await api.crudAdd(...) } catch(e) { toast.error(...) }` in every admin action handler."
+}
