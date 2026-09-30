@@ -23,7 +23,7 @@ const TRAMITES = ["papeles_vtv", "asesoria_legal"];
 function TramitesSection() {
   const { push } = useApp();
   return (
-    <section className="max-w-6xl mx-auto px-4 pt-6 pb-0" data-testid="tramites-section">
+    <section className="max-w-6xl mx-auto px-4 pt-16 pb-0" data-testid="tramites-section">
       <h2 className="font-cond font-900 uppercase text-4xl sm:text-5xl text-white tracking-wide">
         Trámites <span className="text-[#FFD60A]">y Gestoría</span>
       </h2>

@@ -115,8 +115,8 @@ export function AdminPanel({ onClose }) {
 }
 
 function Pendientes({ subs, refresh }) {
-  const approve = async (id) => { await api.approve(id); toast.success("Aprobado"); refresh(); };
-  const reject = async (id) => { await api.rejectSubmission(id); toast.success("Rechazado"); refresh(); };
+  const approve = async (id) => { try { await api.approve(id); toast.success("Aprobado"); refresh(); } catch { toast.error("No se pudo aprobar"); } };
+  const reject = async (id) => { try { await api.rejectSubmission(id); toast.success("Rechazado"); refresh(); } catch { toast.error("No se pudo rechazar"); } };
   return (
     <div className="space-y-2">
       {subs.length === 0 && <p className="text-white/40 text-sm">No hay talleres pendientes.</p>}
@@ -140,10 +140,12 @@ function AgendaAdmin({ events, refresh }) {
   const [f, setF] = useState({ title: "", date: "", location: "", type: "expo", description: "" });
   const add = async () => {
     if (!f.title || !f.date) return toast.error("Completá título y fecha");
-    await api.addEvent(f); toast.success("Evento agregado");
-    setF({ title: "", date: "", location: "", type: "expo", description: "" }); refresh();
+    try {
+      await api.addEvent(f); toast.success("Evento agregado");
+      setF({ title: "", date: "", location: "", type: "expo", description: "" }); refresh();
+    } catch { toast.error("No se pudo agregar el evento"); }
   };
-  const del = async (id) => { await api.delEvent(id); refresh(); };
+  const del = async (id) => { try { await api.delEvent(id); refresh(); } catch { toast.error("No se pudo eliminar"); } };
   return (
     <div>
       <div className="grid sm:grid-cols-2 gap-2 mb-3">
@@ -172,9 +174,10 @@ function CrudAdmin({ coll, items, refresh, fields, empty, label }) {
   const add = async () => {
     const payload = { ...f };
     ["lat", "lng"].forEach((k) => { if (payload[k] !== undefined && payload[k] !== "") payload[k] = parseFloat(payload[k]); });
-    await api.crudAdd(coll, payload); toast.success("Agregado"); setF(empty); refresh();
+    try { await api.crudAdd(coll, payload); toast.success("Agregado"); setF(empty); refresh(); }
+    catch { toast.error("No se pudo agregar"); }
   };
-  const del = async (id) => { await api.crudDel(coll, id); refresh(); };
+  const del = async (id) => { try { await api.crudDel(coll, id); refresh(); } catch { toast.error("No se pudo eliminar"); } };
   return (
     <div>
       <div className="grid sm:grid-cols-2 gap-2 mb-3">

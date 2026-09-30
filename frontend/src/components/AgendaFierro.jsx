@@ -16,25 +16,25 @@ export function AgendaFierro() {
   const [events, setEvents] = useState([]);
   useEffect(() => { api.getEvents().then(setEvents); }, []);
   return (
-    <section id="agenda" className="max-w-6xl mx-auto px-4 py-12" data-testid="agenda-fierro">
+    <section id="agenda" className="max-w-6xl mx-auto px-4 py-10" data-testid="agenda-fierro">
       <div className="flex items-center gap-3 mb-2">
-        <CalendarDays className="text-[#FFD60A]" />
+        <img src="/alp-emblem.png" alt="A.L.P." className="h-12 sm:h-14 w-auto select-none" />
         <h2 className="font-cond font-900 uppercase text-4xl sm:text-5xl text-white tracking-wide">Agenda AUTOMOTOS L.P.</h2>
       </div>
       <p className="text-white/50 text-base">Expos, carreras y encuentros en La Plata y alrededores.</p>
-      <div className="grid sm:grid-cols-2 gap-4 mt-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mt-6">
         {events.map((e) => {
           const t = TAG[e.type] || TAG.encuentro;
           return (
-            <article key={e.id} className="rounded-xl bg-[#12141C] border border-[#1F2330] p-5 hover:border-[#FFD60A]/40 transition" data-testid={`event-${e.id}`}>
-              <span className="inline-block text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full" style={{ background: t.bg, color: t.fg }}>
+            <article key={e.id} className="rounded-xl bg-[#12141C] border border-[#1F2330] p-3 hover:border-[#FFD60A]/40 transition" data-testid={`event-${e.id}`}>
+              <span className="inline-block text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ background: t.bg, color: t.fg }}>
                 {t.label}
               </span>
-              <h3 className="font-cond font-800 text-2xl text-white mt-2 leading-tight">{e.title}</h3>
-              <p className="text-white/50 text-sm mt-1">{e.description}</p>
-              <div className="flex flex-wrap items-center gap-4 mt-3 text-sm text-white/70">
-                <span className="inline-flex items-center gap-1.5"><CalendarDays size={15} className="text-[#FFD60A]" /> {fmtDate(e.date)}</span>
-                <span className="inline-flex items-center gap-1.5"><MapPin size={15} className="text-[#FFD60A]" /> {e.location}</span>
+              <h3 className="font-cond font-800 text-lg text-white mt-1.5 leading-tight">{e.title}</h3>
+              <p className="text-white/50 text-xs mt-1 line-clamp-2">{e.description}</p>
+              <div className="flex flex-col gap-1 mt-2 text-xs text-white/70">
+                <span className="inline-flex items-center gap-1.5"><CalendarDays size={13} className="text-[#FFD60A]" /> {fmtDate(e.date)}</span>
+                <span className="inline-flex items-center gap-1.5"><MapPin size={13} className="text-[#FFD60A]" /> {e.location}</span>
               </div>
             </article>
           );
