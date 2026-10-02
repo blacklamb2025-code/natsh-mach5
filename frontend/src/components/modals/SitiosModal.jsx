@@ -5,7 +5,7 @@ import { Modal } from "@/components/modals/Modal";
 
 export function SitiosModal({ onClose }) {
   const [items, setItems] = useState([]);
-  useEffect(() => { api.getSites().then(setItems); }, []);
+  useEffect(() => { api.getSites().then(setItems).catch(() => {}); }, []);
 
   return (
     <Modal title="Sitios de encuentro" onClose={onClose} size="lg" testid="sitios-modal">

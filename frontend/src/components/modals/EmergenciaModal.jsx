@@ -12,7 +12,7 @@ const CALLS = [
 export function EmergenciaModal({ onClose }) {
   const { openModal } = useApp();
   const [places, setPlaces] = React.useState([]);
-  React.useEffect(() => { api.getPlaces().then(setPlaces); }, []);
+  React.useEffect(() => { api.getPlaces().then(setPlaces).catch(() => {}); }, []);
   const seeOnMap = (p) => {
     if (p.lat == null || p.lng == null) { openModal("map", {}); return; }
     openModal("map", { focus: [p.lat, p.lng] });

@@ -25,7 +25,8 @@ export function AdminPanel({ onClose }) {
   const refresh = useCallback(async () => {
     const [s, e, c, p, si, d] = await Promise.all([
       api.getSubmissions().catch(() => []),
-      api.getEvents(), api.getCameras(), api.getPlaces(), api.getSites(), api.getDesvios(),
+      api.getEvents().catch(() => []), api.getCameras().catch(() => []), api.getPlaces().catch(() => []),
+      api.getSites().catch(() => []), api.getDesvios().catch(() => []),
     ]);
     setSubs(s); setEvents(e); setCameras(c); setPlaces(p); setSites(si); setDesvios(d);
   }, []);

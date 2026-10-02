@@ -10,7 +10,7 @@ export function SearchResults({ query }) {
   useEffect(() => {
     let alive = true;
     setLoading(true);
-    api.search(query).then((d) => { if (alive) { setItems(d); setLoading(false); } });
+    api.search(query).then((d) => { if (alive) { setItems(d); setLoading(false); } }).catch(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, [query]);
 

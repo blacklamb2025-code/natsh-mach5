@@ -14,7 +14,7 @@ const TYPE = {
 export function DesviosModal({ onClose }) {
   const { openModal } = useApp();
   const [items, setItems] = useState([]);
-  useEffect(() => { api.getDesvios().then(setItems); }, []);
+  useEffect(() => { api.getDesvios().then(setItems).catch(() => {}); }, []);
 
   return (
     <Modal title="Desvios activos" onClose={onClose} size="lg" testid="desvios-modal">
