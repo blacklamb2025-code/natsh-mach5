@@ -7,6 +7,8 @@ export function Hero() {
     <section className="bg-[#0B0C10] border-b border-[#1F2330]" data-testid="hero">
       <video
         src="/hero-video.mp4"
+        poster="/hero-automotos.webp"
+        preload="auto"
         autoPlay
         muted
         loop

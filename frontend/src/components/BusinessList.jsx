@@ -15,7 +15,7 @@ export function BusinessList({ vehicle, category }) {
   useEffect(() => {
     let alive = true;
     setLoading(true);
-    api.getBusinesses({ vehicle, category }).then((d) => { if (alive) { setItems(d); setLoading(false); } });
+    api.getBusinesses({ vehicle, category }).then((d) => { if (alive) { setItems(d); setLoading(false); } }).catch(() => { if (alive) setLoading(false); });
     return () => { alive = false; };
   }, [vehicle, category]);
 

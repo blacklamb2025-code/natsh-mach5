@@ -12,8 +12,9 @@ export function BusinessDetail({ id }) {
   const [b, setB] = useState(null);
   const [form, setForm] = useState({ author: "", stars: 5, text: "" });
 
-  const load = () => api.getBusiness(id).then(setB);
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [id]);
+  const load = () => api.getBusiness(id).then(setB).catch(() => toast.error("No se pudo cargar el taller"));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { load(); }, [id]);
 
   if (!b) return <div className="max-w-4xl mx-auto px-4 py-8 text-white/40">Cargando...</div>;
   const cat = getCategory(b.category);
@@ -22,7 +23,9 @@ export function BusinessDetail({ id }) {
   const submitReview = async (e) => {
     e.preventDefault();
     if (!form.author.trim()) return toast.error("Poné tu nombre");
-    await api.addReview({ businessId: b.id, author: form.author, stars: form.stars, text: form.text, photos: [] });
+    try {
+      await api.addReview({ businessId: b.id, author: form.author, stars: form.stars, text: form.text, photos: [] });
+    } catch { return toast.error("No se pudo enviar la reseña"); }
     toast.success("Gracias por tu reseña!");
     setForm({ author: "", stars: 5, text: "" });
     load();

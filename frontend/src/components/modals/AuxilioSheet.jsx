@@ -5,7 +5,7 @@ import { Modal } from "@/components/modals/Modal";
 
 export function AuxilioSheet({ onClose }) {
   const [items, setItems] = useState([]);
-  useEffect(() => { api.getBusinesses({ category: "grua" }).then(setItems); }, []);
+  useEffect(() => { api.getBusinesses({ category: "grua" }).then(setItems).catch(() => {}); }, []);
 
   return (
     <Modal title="Auxilio y gruas" onClose={onClose} size="lg" testid="auxilio-sheet">

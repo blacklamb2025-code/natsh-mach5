@@ -41,7 +41,7 @@ export function MapView({ onClose, focus, initial }) {
   useEffect(() => {
     Promise.all([api.getFuel(), api.getRadars(), api.getCameras(), api.getDesvios()]).then(([fuel, radars, cameras, desvios]) => {
       setData({ fuel, radars, cameras, desvios });
-    });
+    }).catch(() => toast.error("No se pudo cargar el mapa"));
   }, []);
 
   useEffect(() => {
@@ -111,10 +111,12 @@ export function MapView({ onClose, focus, initial }) {
     const handler = async (e) => {
       mapRef.current.off("click", handler);
       setReporting(false);
-      const created = await api.addRadar({ lat: e.latlng.lat, lng: e.latlng.lng, type: "movil", description: "Reporte comunitario", community: true });
-      setData((d) => ({ ...d, radars: [...d.radars, created] }));
-      setActive({ combustible: false, carga: false, radar: true, camara: false, desvios: false });
-      toast.success("Radar reportado. Gracias!");
+      try {
+        const created = await api.addRadar({ lat: e.latlng.lat, lng: e.latlng.lng, type: "movil", description: "Reporte comunitario", community: true });
+        setData((d) => ({ ...d, radars: [...d.radars, created] }));
+        setActive({ combustible: false, carga: false, radar: true, camara: false, desvios: false });
+        toast.success("Radar reportado. Gracias!");
+      } catch { toast.error("No se pudo reportar el radar"); }
     };
     mapRef.current.on("click", handler);
   };

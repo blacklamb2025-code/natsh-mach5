@@ -14,7 +14,7 @@ function fmtDate(d) {
 }
 export function AgendaFierro() {
   const [events, setEvents] = useState([]);
-  useEffect(() => { api.getEvents().then(setEvents); }, []);
+  useEffect(() => { api.getEvents().then(setEvents).catch(() => {}); }, []);
   return (
     <section id="agenda" className="max-w-6xl mx-auto px-4 py-10" data-testid="agenda-fierro">
       <div className="flex items-center gap-3 mb-2">
