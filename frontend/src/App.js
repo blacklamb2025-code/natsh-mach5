@@ -16,6 +16,7 @@ import { Mach5Bar } from "@/components/Mach5Bar";
 import { ModalHost } from "@/components/modals/Modal";
 import { getCategory } from "@/data/categories";
 import { CategoryIcon } from "@/components/CategoryIcon";
+import { WebsiteBuilder } from "@/components/WebsiteBuilder";
 
 // Trámites y Gestoría: Papeles/VTV y Asesoría Legal (fuera de Auto/Moto, arriba de Agenda Fierro).
 const TRAMITES = ["papeles_vtv", "asesoria_legal"];
@@ -64,6 +65,8 @@ function Screen() {
       return <BusinessDetail id={current.id} />;
     case "search":
       return <SearchResults query={current.query} />;
+    case "builder":
+      return <WebsiteBuilder />;
     case "home":
     default:
       return (
