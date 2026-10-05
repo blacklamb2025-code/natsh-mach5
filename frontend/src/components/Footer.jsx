@@ -1,5 +1,5 @@
 import React from "react";
-import { MessageCircle, PlusCircle, Lock } from "lucide-react";
+import { MessageCircle, PlusCircle, Lock, Mail } from "lucide-react";
 import { useApp } from "@/context/AppContext";
 import { LogoBig } from "@/components/graphics";
 import { waLink, MACH5_WHATSAPP } from "@/lib/api";
@@ -10,7 +10,7 @@ export function Footer() {
     <footer className="border-t border-[#1F2330] bg-[#0B0C10] mt-10">
       <div className="max-w-6xl mx-auto px-4 py-10 grid gap-8 md:grid-cols-3">
         <div>
-          <div className="inline-block rounded-xl bg-white/95 px-4 py-3 shadow-lg shadow-black/30">
+          <div className="inline-block">
             <LogoBig />
           </div>
           <p className="text-white/50 text-sm mt-4 max-w-xs">
@@ -34,7 +34,14 @@ export function Footer() {
             target="_blank" rel="noreferrer"
             className="inline-flex items-center gap-2 text-sm text-white/80 hover:text-[#25D366] transition w-fit"
           >
-            <MessageCircle size={16} /> WhatsApp MACH5
+            <MessageCircle size={16} /> WhatsApp +54 9 2216370789
+          </a>
+          <a
+            data-testid="footer-email-link"
+            href="mailto:automotos.lp@proton.me"
+            className="inline-flex items-center gap-2 text-sm text-white/80 hover:text-[#FFD60A] transition w-fit"
+          >
+            <Mail size={16} /> automotos.lp@proton.me
           </a>
           <button
             data-testid="footer-admin-btn"
