@@ -28,6 +28,14 @@ const client = axios.create({
   headers: { "X-Requested-With": "XMLHttpRequest" },
 });
 
+// Sin backend, el hosting devuelve HTML en vez de JSON: se trata como error para no romper la pagina.
+client.interceptors.response.use((res) => {
+  if (typeof res.data === "string" && /^\s*</.test(res.data)) {
+    return Promise.reject(new Error("Respuesta invalida del servidor"));
+  }
+  return res;
+});
+
 export const api = {
   // public
   getBusinesses: (params) => client.get("/businesses", { params }).then((r) => r.data),
