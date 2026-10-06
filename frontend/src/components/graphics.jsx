@@ -4,9 +4,9 @@ import React from "react";
 export function LogoBig({ className = "" }) {
   return (
     <img
-      src="/logo-completo.webp"
+      src="/logo-auto-moto.png"
       alt="AUTO MOTOS - La Plata y alrededores"
-      className={`h-16 sm:h-20 w-auto max-w-full block select-none ${className}`}
+      className={`h-24 sm:h-28 w-auto max-w-full block rounded-lg select-none ${className}`}
       data-testid="logo-big"
       draggable={false}
     />
@@ -17,9 +17,9 @@ export function LogoBig({ className = "" }) {
 export function LogoCompact({ className = "" }) {
   return (
     <img
-      src="/logo-simple.webp"
+      src="/marca-automotos.png"
       alt="AUTO MOTOS L.P."
-      className={`h-8 w-auto block select-none ${className}`}
+      className={`h-9 w-auto block select-none ${className}`}
       data-testid="logo-compact"
       draggable={false}
     />

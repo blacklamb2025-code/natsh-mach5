@@ -4,7 +4,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const API = `${BACKEND_URL}/api`;
 
 export const MACH5_WHATSAPP = "5492216370789";
-export const DEFAULT_ASSIST = "5492216370108";
+export const DEFAULT_ASSIST = "5492216370789";
 
 export const HERO_PHOTOS = [
   { url: "https://images.unsplash.com/photo-1517026575980-3e1e2dedeab4?w=900&q=80", label: "Tablero" },
@@ -26,6 +26,14 @@ const client = axios.create({
   baseURL: API,
   withCredentials: true,
   headers: { "X-Requested-With": "XMLHttpRequest" },
+});
+
+// Sin backend, el hosting devuelve HTML en vez de JSON: se trata como error para no romper la pagina.
+client.interceptors.response.use((res) => {
+  if (typeof res.data === "string" && /^\s*</.test(res.data)) {
+    return Promise.reject(new Error("Respuesta invalida del servidor"));
+  }
+  return res;
 });
 
 export const api = {
